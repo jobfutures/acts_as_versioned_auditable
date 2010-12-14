@@ -1,0 +1,17 @@
+ActsAsVersionedAuditable
+========================
+
+Adds the ability to store the user who created the version. This expects a version_created_by_user_id column in the versions table.
+
+   model Product < ActiveRecord::Base
+     acts_as_versioned_auditable
+   end
+   product.find(:first).versions.first.user
+
+ Use around filter in ApplicationController to set the current user. For example:
+
+   def set_versioned_auditable_user
+     ActiveRecord::Acts::VersionedAuditable.current_user = current_user
+     yield
+     ActiveRecord::Acts::VersionedAuditable.current_user = nil
+   end
